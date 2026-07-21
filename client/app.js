@@ -5,7 +5,7 @@ function getBathValue() {
       return parseInt(uiBathrooms[i].value);
     }
   }
-  return -1;
+  return -1; // Mặc định nếu chưa chọn
 }
 
 function getBHKValue() {
@@ -15,7 +15,7 @@ function getBHKValue() {
       return parseInt(uiBHK[i].value);
     }
   }
-  return -1;
+  return -1; // Mặc định nếu chưa chọn
 }
 
 function onClickedEstimatePrice() {
@@ -26,7 +26,11 @@ function onClickedEstimatePrice() {
   var location = document.getElementById("uiLocations");
   var estPrice = document.getElementById("uiEstimatedPrice");
 
-  // Đã cập nhật sang URL API trên Render
+  if (!sqft || !sqft.value) {
+    alert("Vui lòng nhập diện tích (Square Feet)!");
+    return;
+  }
+
   var url = "https://predict-price-psro.onrender.com/predict_home_price";
 
   $.post(url, {
@@ -36,14 +40,17 @@ function onClickedEstimatePrice() {
       location: location.value
   }, function(data, status) {
       console.log("Estimated price:", data.estimated_price);
-      estPrice.innerHTML = "<h2>" + data.estimated_price.toString() + " Lakh</h2>";
-      console.log(status);
+      if (estPrice) {
+          estPrice.innerHTML = "<h2>" + data.estimated_price.toString() + " Lakh</h2>";
+      }
+      console.log("Status:", status);
+  }).fail(function(jqXHR, textStatus, errorThrown) {
+      console.error("Lỗi gửi request POST:", textStatus, errorThrown);
   });
 }
 
 function onPageLoad() {
   console.log("document loaded");
-  // Đã cập nhật sang URL API trên Render
   var url = "https://predict-price-psro.onrender.com/get_location_names";
   
   $.get(url, function(data, status) {

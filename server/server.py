@@ -3,10 +3,10 @@ from flask_cors import CORS
 import util
 
 app = Flask(__name__)
-# Khởi tạo CORS cho toàn bộ ứng dụng
+# Bật CORS cho toàn bộ server để Vercel truy cập được
 CORS(app)
 
-# Load sẵn artifacts ngay khi server khởi động trên Render / Gunicorn
+# Tải sẵn artifacts (columns.json & model) ngay khi server khởi động trên Render
 util.load_saved_artifacts()
 
 @app.route('/get_location_names', methods=['GET'])
